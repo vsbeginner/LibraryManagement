@@ -55,7 +55,7 @@ This architecture keeps the application **modular, scalable, and easy to maintai
 
 #  Key Features
 
-### 📖 Book Management
+###  Book Management
 
 Add and manage books available in the library collection.
 
@@ -191,7 +191,7 @@ Possible enhancements for this system include:
 
 ---
 
-# 👨‍💻 Author
+# Author
 
 **Vinayak Sharma**
 
