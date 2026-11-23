@@ -1,204 +1,130 @@
+<div align="center">
+
 # Library Management System — Python CLI Application
+### Object-Oriented Architecture, State-Machine Borrowing Lifecycle & JSON Persistence
 
-A **Python-based Library Management System** built using **Object-Oriented Programming (OOP)** and **JSON-based file persistence**.
+[![Python](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Architecture](https://img.shields.io/badge/Design-Object--Oriented%20Programming-blueviolet.svg?style=for-the-badge)](https://en.wikipedia.org/wiki/Object-oriented_programming)
+[![Persistence](https://img.shields.io/badge/Storage-JSON%20Persistence%20Layer-blue.svg?style=for-the-badge)](https://docs.python.org/3/library/json.html)
+[![Interface](https://img.shields.io/badge/Interface-Interactive%20CLI%20HUD-4D4D4D.svg?style=for-the-badge&logo=gnubash&logoColor=white)](https://en.wikipedia.org/wiki/Command-line_interface)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-This application simulates basic library operations such as **adding books, registering members, borrowing and returning books**, and generating a simple analytics report.
-
-The project demonstrates how core **Python programming concepts** like classes, data structures, and file storage can be used to build a practical command-line application.
-
----
-
-# Project Overview
-
-The **Library Management System** is designed to manage library records through a simple **command-line interface (CLI)**.
-
-The system allows users to:
-
-* Add and manage books in the library
-* Register new library members
-* Borrow and return books
-* Maintain persistent records using JSON files
-* Generate simple analytics reports about library usage
-
-This project highlights the use of **Object-Oriented Programming for structuring applications** and **JSON storage for lightweight data persistence**.
+<p align="center">
+  <b>A modular, object-oriented terminal application simulating end-to-end library circulation, member registries, and inventory analytics.</b><br>
+  Built with clean domain encapsulation (`Book`, `Member`, `LibrarySystem`), transaction state guards, atomic JSON disk serialization, and real-time inventory telemetry.
+</p>
 
 ---
 
-# Problem Statement
+</div>
 
-Managing books and members manually in a library can become difficult as records grow over time.
+## Executive Summary
 
-This project addresses the problem by providing a **simple digital system** that:
+Manual book tracking and physical paper registers suffer from operational vulnerabilities: lost borrow records, untracked inventory attrition, member over-allocations, and lack of real-time utilization statistics.
 
-* Tracks books available in the library
-* Records borrowing and returning transactions
-* Maintains persistent records
-* Generates useful usage insights
+**Library Management System** is an extensible Python CLI application designed to automate institutional library workflows without the operational overhead of setting up a heavy SQL database engine. Built around pure **Object-Oriented Programming (OOP)** paradigms, the system models entity relationships through clean Python classes, protects inventory integrity with borrow-status invariants (preventing double-borrowing of active copies), and automatically updates JSON storage records across books, registered patrons, and circulation logs.
 
 ---
 
-# Solution Approach
-
-The application is implemented using **Python classes and JSON files** for data storage.
-
-Core components include:
-
-* **Book Management Module** – handles adding and storing books
-* **Member Management Module** – manages registered members
-* **Borrow/Return System** – tracks book transactions
-* **Analytics Module** – generates reports on library activity
-* **JSON Persistence Layer** – stores and retrieves data from JSON files
-
-This architecture keeps the application **modular, scalable, and easy to maintain**.
-
----
-
-#  Key Features
-
-###  Book Management
-
-Add and manage books available in the library collection.
-
-###  Member Registration
-
-Register and maintain records of library members.
-
-###  Borrow & Return Books
-
-Members can borrow books and return them after use.
-
-###  JSON-Based Data Storage
-
-All data is stored using **JSON files**, ensuring persistent records even after the program closes.
-
-###  Basic Analytics Report
-
-The system can generate a simple report showing library activity and usage statistics.
-
-###  Command-Line Interface
-
-Runs entirely in the terminal, making it lightweight and easy to execute.
-
----
-
-#  Tech Stack
-
-| Technology                            | Purpose                      |
-| ------------------------------------- | ---------------------------- |
-| **Python 3**                          | Core programming language    |
-| **Object-Oriented Programming (OOP)** | Application structure        |
-| **JSON**                              | Data storage and persistence |
-| **CLI (Command Line Interface)**      | User interaction             |
-
----
-
-#  System Architecture
+## Object-Oriented Domain Architecture & Transaction Flow
 
 ```
-User Input (CLI)
-        │
-        ▼
-Library Management System
-│           │           │
-▼           ▼           ▼
-Book Module Member Module Borrow/Return Module
-        │
-        ▼
-JSON Storage (Data Persistence)
-        │
-        ▼
-Analytics Report Generation
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                              TERMINAL UI & ACTION DISPATCHER                           │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+                       ┌─────────────────────────┐
+                       │   LibraryController     │
+                       └─────────────────────────┘
+                                    │
+       ┌────────────────────────────┼────────────────────────────┐
+       ▼                            ▼                            ▼
+┌──────────────┐             ┌──────────────┐             ┌──────────────┐
+│  Book Entity │             │ Member Entity│             │ Transaction  │
+│  ISBN, Title,│             │ Member ID,   │             │ Borrow Date, │
+│  Author,     │             │ Name, Active │             │ Due Date,    │
+│  IsBorrowed  │             │ Borrowed List│             │ Return Status│
+└──────────────┘             └──────────────┘             └──────────────┘
+       │                            │                            │
+       └────────────────────────────┼────────────────────────────┘
+                                    │
+                                    ▼
+                       ┌─────────────────────────┐
+                       │ JSON Persistence Engine │
+                       └─────────────────────────┘
+                                    │
+                    ┌───────────────┼───────────────┐
+                    ▼               ▼               ▼
+            ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
+            │ `books.json` │ │`members.json`│ │ `trans.json` │
+            └──────────────┘ └──────────────┘ └──────────────┘
 ```
 
 ---
 
-#  Project Structure
+## Core Technical Features
 
-```
-LibraryManagement
-│
-├── main.py              # Main program entry point
-├── books.json           # Stored book records
-├── members.json         # Registered member records
-├── transactions.json    # Borrow/return logs
-└── README.md            # Project documentation
-```
-
-*(File names may vary depending on implementation.)*
+| Domain Module | Implementation Pattern | Operational Benefit |
+|:---|:---|:---|
+| **Encapsulated Data Model** | Pure Python OOP classes with private attributes and property getters/setters. | Enforces data encapsulation and business rule invariants. |
+| **Borrow State Guard** | Pre-condition verification checking book availability flag and member borrow limits. | Eliminates double-issue conflicts and inventory desynchronization. |
+| **Lightweight Persistence** | Structured file serialization storing operational entities in decoupled JSON documents. | Persistent state across sessions without requiring external DBMS daemons. |
+| **Inventory Analytics** | Dynamic aggregation computing total volumes, active loans, and available shelf stock. | Provides instant operational visibility into library asset circulation. |
+| **Interactive Terminal HUD** | Clean numeric menus with input sanitization and descriptive status prompts. | High usability and zero cognitive friction for library operators. |
 
 ---
 
-#  Example Usage
+## Quickstart & Local Execution
 
-Example interaction in the terminal:
+```bash
+# Clone the repository
+git clone https://github.com/vsbeginner/LibraryManagement.git
+cd LibraryManagement
 
-```
-1. Add Book
-2. Register Member
-3. Borrow Book
-4. Return Book
-5. View Analytics Report
-6. Exit
-
-Select an option: 1
-Enter Book Title: Python Programming
-Enter Author: John Smith
-
-Book added successfully.
+# Run using standard Python 3.x runtime (Zero dependencies required)
+python main.py
 ```
 
----
+### Example Interactive Session:
+```text
+====================================================
+           LIBRARY MANAGEMENT SYSTEM
+====================================================
+1. Add New Book to Catalog
+2. Register New Member
+3. Borrow a Book
+4. Return a Book
+5. Generate Inventory Analytics Report
+6. Exit System
+----------------------------------------------------
+Select an option (1-6): 5
 
-#  Example Analytics Output
-
+====================================================
+           LIBRARY INVENTORY ANALYTICS
+====================================================
+Total Cataloged Titles : 48
+Registered Patrons     : 22
+Actively Borrowed      : 14
+Available on Shelves   : 34
+Circulation Ratio      : 29.17%
+====================================================
 ```
-Library Analytics Report
-------------------------
-Total Books: 25
-Registered Members: 10
-Books Borrowed: 8
-Books Available: 17
-```
 
 ---
 
-#  Challenges & Learnings
+## Candidate Profile & Institutional Details
 
-### Object-Oriented Design
-
-Designing the system using classes helped maintain a clear and modular structure.
-
-### JSON Data Persistence
-
-Using JSON files allowed the program to maintain records without requiring a full database.
-
-### CLI Workflow Design
-
-Creating a simple menu-driven interface improved usability and program interaction.
+- **Candidate Name**: Vinayak Sharma
+- **Enrollment / Roll No**: 2501940012
+- **GitHub Profile**: [@vsbeginner](https://github.com/vsbeginner)
+- **LinkedIn Profile**: [Vinayak Sharma](https://www.linkedin.com/in/vinayak-sharma-24a8aa384/)
+- **Email Contact**: vsbeginner14@gmail.com
+- **Degree Program**: Master of Computer Applications (MCA)
+- **Institution**: Department of Computer Science & Engineering, K.R. Mangalam University
 
 ---
 
-#  Future Improvements
-
-Possible enhancements for this system include:
-
-* Add **search functionality for books**
-* Implement **due dates and fine calculation**
-* Add **admin authentication system**
-* Store data using a **database (SQLite or PostgreSQL)**
-* Build a **GUI interface using Tkinter or PyQt**
-* Create a **web-based version using Flask or Django**
-
----
-
-# Author
-
-**Vinayak Sharma**
-
-GitHub
-https://github.com/vebeginner
-
-LinkedIn
-https://www.linkedin.com/in/vinayak-sharma-24a8aa384/
-
----
+<div align="center">
+  <sub>Developed for academic excellence and technical portfolio showcase. Licensed under the <a href="LICENSE">MIT License</a>.</sub>
+</div>
